@@ -18,6 +18,15 @@ public class Node : MonoBehaviour
 	public Material roughMat;
 	public Material wallMat;
 
+	//Pierre's Changes
+	//public List<Node> neighbors;
+
+	//public Node()
+	//{
+	//	neighbors = new List<Node>();
+	//}
+	//*************
+
     void Update()
     {
 		switch (nodeType)
