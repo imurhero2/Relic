@@ -6,17 +6,16 @@ public class CoordinateText : MonoBehaviour
 {
 	public TMP_Text coordinateText;
 
-	private void Start()
-	{
-		coordinateText.text = $"({transform.position.x},{transform.position.z})";
-	}
-
 	private void Update()
     {
 		if (transform.hasChanged)
 		{
-			transform.position = new Vector3(Mathf.Floor(transform.position.x), 0, Mathf.Floor(transform.position.z));
-			coordinateText.text = $"({transform.position.x},{transform.position.z})";
+			float x = Mathf.Round(transform.position.x);
+			float z = Mathf.Round(transform.position.z);
+
+			transform.position = new Vector3(x, 0, z);
+			coordinateText.text = $"({x},{z})";
+			gameObject.name = $"Node ({x},{z})";
 		}
     }
 }
