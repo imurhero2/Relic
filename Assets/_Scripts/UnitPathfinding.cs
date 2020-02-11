@@ -12,42 +12,41 @@ public class UnitPathfinding : MonoBehaviour
 
     public void MoveToTile(Node target)
     {
-        Node current = null;
-        List<Node> open = new List<Node>(); ;
-        List<Node> closed = new List<Node>();
+        Node currentNode = null;
+        List<Node> openNodes = new List<Node>(); ;
+        List<Node> closedNodes = new List<Node>();
         int distance = 0;
 
-        open.Add(graph.graph[(int)Math.Round(currentPos.x), (int)Math.Round(currentPos.y)]);
+        openNodes.Add(graph.graph[(int)Math.Round(currentPos.x), (int)Math.Round(currentPos.y)]);
 
-        while (open.Count > 0)
+        while (openNodes.Count > 0)
         {
-            var lowest = open.Min();
-            current = lowest;
+            var lowest = openNodes.Min();
+            currentNode = lowest;
 
-            closed.Add(current);
-            open.Remove(current);
+            closedNodes.Add(currentNode);
+            openNodes.Remove(currentNode);
 
-            Debug.Log("(" +current.gameObject.transform.position.x + ", " + current.gameObject.transform.position.y+")");
+			Debug.Log($"({currentNode.gameObject.transform.position.x}, {currentNode.gameObject.transform.position.y})");
 
-            if (closed.Contains(target))
+			if (closedNodes.Contains(target))
                 break;
 
-            var neighbors = current.neighbors;
-            distance++;
+            distance++; // Needs to take into account cost of node
 
-            foreach(var neighbor in neighbors)
+            foreach(var neighbor in currentNode.neighbors)
             {
-                if (!closed.Contains(neighbor))
+                if (!closedNodes.Contains(neighbor))
                 {
                     continue;
                 }
-                if (!open.Contains(neighbor))
+                if (!openNodes.Contains(neighbor))
                 {
                     neighbor.distance = distance +  neighbor.cost;
                     neighbor.estimate = GetEstimate(new Vector2(neighbor.gameObject.transform.position.x, neighbor.gameObject.transform.position.y), new Vector2(target.gameObject.transform.position.x, target.gameObject.transform.position.y));
                     neighbor.score = neighbor.distance + neighbor.estimate;
 
-                    open.Add(neighbor);
+                    openNodes.Add(neighbor);
                 }
                 else
                 {
@@ -55,17 +54,17 @@ public class UnitPathfinding : MonoBehaviour
                     {
                         neighbor.distance = distance;
                         neighbor.score = neighbor.distance + neighbor.estimate;
-                        current = neighbor;
+                        currentNode = neighbor;
                     }
                 }
             }
         }
 
-        if(current != null)
+        if(currentNode != null)
         {
-            foreach(var tile in closed)
+            foreach(var tile in closedNodes)
             {
-                Debug.Log("(" + tile.gameObject.transform.position.x + ", " + tile.gameObject.transform.position.y + ")");
+                Debug.Log($"({tile.gameObject.transform.position.x}, {tile.gameObject.transform.position.y}");
                 //move through these tiles
             }
         }
