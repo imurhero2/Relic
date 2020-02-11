@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,13 +30,27 @@ public class Node : MonoBehaviour
 	public int score;
 	public int estimate;
 
-	public Node()
+	private int xCoord;
+	private int zCoord;
+
+	private void Start()
+	{
+		xCoord = Mathf.RoundToInt(transform.position.x);
+		zCoord = Mathf.RoundToInt(transform.position.z);
+		Map.nodes[xCoord, zCoord] = this;
+		GenerateNeighbors(); // Need to wait until Map.nodes is fully populated
+	}
+
+	public void GenerateNeighbors()
 	{
 		neighbors = new List<Node>();
+		if (zCoord + 1 < Map.instance.data.height)	neighbors.Add(Map.nodes[xCoord, zCoord + 1]); // Up
+		if (xCoord + 1 < Map.instance.data.width)	neighbors.Add(Map.nodes[xCoord + 1, zCoord]); // Right
+		if (zCoord - 1 >= 0)						neighbors.Add(Map.nodes[xCoord, zCoord - 1]); // Down
+		if (xCoord - 1 >= 0)						neighbors.Add(Map.nodes[xCoord - 1, zCoord]); // Left
 	}
-	//*************
 
-    void Update()
+	void Update()
     {
 		switch (nodeType)
 		{

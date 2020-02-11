@@ -7,6 +7,7 @@ public class MapEditor : EditorWindow
 	private int height;
 	private GameObject node;
 	private Transform nodeParent;
+	private MapData data;
 
 	[MenuItem("Window/Map Editor")]
 	public static void ShowWindow()
@@ -19,13 +20,14 @@ public class MapEditor : EditorWindow
 		GUILayout.Label("Map Generator");
 		node = EditorGUILayout.ObjectField("Node", node, typeof(GameObject), false) as GameObject;
 		nodeParent = EditorGUILayout.ObjectField("Node Parent", nodeParent, typeof(Transform), true) as Transform;
+		data = EditorGUILayout.ObjectField("Map Data", data, typeof(MapData), true) as MapData;
 		width = EditorGUILayout.IntField("Width:", width);
 		height = EditorGUILayout.IntField("Height:", height);
 
 		if (GUILayout.Button("Generate Map"))
 		{
 			GenerateMap();
-			nodeParent.gameObject.GetComponent<GraphData>().GenerateGraph(width, height);
+			//nodeParent.gameObject.GetComponent<GraphData>().GenerateGraph(width, height);
 		}
 	}
 
@@ -36,6 +38,9 @@ public class MapEditor : EditorWindow
 			Transform child = nodeParent.GetChild(i);
 			DestroyImmediate(child.gameObject);
 		}
+
+		data.width = width;
+		data.height = height;
 
 		for (int w = 0; w < width; w++)
 		{
