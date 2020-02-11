@@ -19,12 +19,20 @@ public class Node : MonoBehaviour
 	public Material wallMat;
 
 	//Pierre's Changes
-	//public List<Node> neighbors;
+	public int cost;
+	public bool walkable;
+	//private const int infinity = int.MaxValue;
 
-	//public Node()
-	//{
-	//	neighbors = new List<Node>();
-	//}
+	public List<Node> neighbors;
+
+	public int distance;
+	public int score;
+	public int estimate;
+
+	public Node()
+	{
+		neighbors = new List<Node>();
+	}
 	//*************
 
     void Update()
@@ -33,12 +41,18 @@ public class Node : MonoBehaviour
 		{
 			case NodeType.Default:
 				meshRenderer.material = defaultMat;
+				cost = 1;
+				walkable = true;
 				break;
 			case NodeType.Rough:
 				meshRenderer.material = roughMat;
+				cost = 2;
+				walkable = true;
 				break;
 			case NodeType.Wall:
 				meshRenderer.material = wallMat;
+				//cost = infinity;
+				walkable = false;
 				break;
 			default:
 				break;

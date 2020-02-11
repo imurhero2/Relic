@@ -25,6 +25,7 @@ public class MapEditor : EditorWindow
 		if (GUILayout.Button("Generate Map"))
 		{
 			GenerateMap();
+			nodeParent.gameObject.GetComponent<GraphData>().GenerateGraph(width, height);
 		}
 	}
 
