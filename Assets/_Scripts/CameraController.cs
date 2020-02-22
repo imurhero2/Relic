@@ -12,8 +12,26 @@ public class CameraController : MonoBehaviour
 	[SerializeField] private float minCameraHeight;
 	[SerializeField] private float maxCameraHeight;
 
+	[SerializeField] private Material highlight;
+
     void Update()
     {
+		RaycastHit hit;
+		var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		if(Physics.Raycast(ray, out hit))
+		{
+			var selection = hit.transform;
+			if (selection.CompareTag("Tile") /*|| selection.CompareTag("Player")*/)
+			{
+				var selectionRenderer = selection.GetComponent<Renderer>();
+				if (selectionRenderer != null)
+				{
+					selectionRenderer.material = highlight;
+				}
+			}
+		}
+
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
 		float scroll = Input.GetAxis("Mouse ScrollWheel");
