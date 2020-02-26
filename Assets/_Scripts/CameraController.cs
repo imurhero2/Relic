@@ -14,31 +14,62 @@ public class CameraController : MonoBehaviour
 
 	[SerializeField] private Material highlight;
 
+	private Collider currentCollider = null;
+
     void Update()
     {
-		RaycastHit hit;
-		var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		
+		PlayerSelect();
+		TileHover();
+		CameraMovement();
 
-		if(Physics.Raycast(ray, out hit))
+	}
+
+	private void PlayerSelect()
+	{
+		if (Input.GetMouseButtonDown(0))
 		{
-			var selection = hit.transform;
-			if (selection.CompareTag("Tile") /*|| selection.CompareTag("Player")*/)
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit))
 			{
-				var selectionRenderer = selection.GetComponent<Renderer>();
-				if (selectionRenderer != null)
+				if (hit.collider.CompareTag("Player"))
 				{
-					selectionRenderer.material = highlight;
+					Debug.Log($"Player Selected \n Location: {hit.collider.transform.position.x}, {hit.collider.transform.position.z}");
+					//Run Script that will create highlighted tiles
 				}
 			}
 		}
+	}
 
+	private void TileHover()
+	{
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if(Physics.Raycast(ray, out hit))
+		{
+			if (currentCollider != hit.collider)
+			{
+				if (hit.collider.CompareTag("Tile"))
+				{
+					Debug.Log($"Tile: {hit.collider.name}, {hit.collider.gameObject.GetComponent<Node>().nodeType}");
+					//I imagine this will be hooked up to UI at some point with tile info
+					
+				}
+				currentCollider = hit.collider;
+			}
+		}
+	}
+
+	private void CameraMovement()
+	{
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
 		float scroll = Input.GetAxis("Mouse ScrollWheel");
 
 		if (h != 0)
 		{
-			transform.position += moveSpeed * Time.deltaTime * h * transform.right; 
+			transform.position += moveSpeed * Time.deltaTime * h * transform.right;
 		}
 
 		if (v != 0)
